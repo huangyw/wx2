@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head lang="zh-cn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>查看合买期数</title>
+    <link rel="stylesheet" href="__CSS__/myweui.min.css">
+    <script type="text/javascript" src="__JS__/myweui.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="__JS__/do.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="weui-cells">
+        <div class="weui-cells__title">当前期数</div>
+        {for start="0" end="$new_cf|sizeof"}
+        <a class="weui-cell weui-cell_access" href="items?cycle_id={$new_cf[$i]['cycle_id']}">
+            <div class="weui-cell__bd">
+                <p>第{$new_cf[$i]['cycle_id']}期</p>
+            </div>
+            <div class="weui-cell__ft">{$new_cf[$i]['money']}元</div>
+        </a>
+        {/for}
+    </div>
+    <div class="weui-cells">
+        <div class="weui-cells__title">历史期数</div>
+        {for start="0" end="$his_cf|sizeof"}
+        <a class="weui-cell weui-cell_access" href="items?cycle_id={$his_cf[$i]['cycle_id']}">
+            <div class="weui-cell__bd">
+                <p>第{$his_cf[$i]['cycle_id']}期</p>
+            </div>
+            <div class="weui-cell__ft">{$his_cf[$i]['money']}元</div>
+        </a>
+        {/for}
+    </div>
+    <a id="addBtn" href="add" class="weui-btn weui-btn_warn">新一期</a>
+</div>
+</body>
+</html>

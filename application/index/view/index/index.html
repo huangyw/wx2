@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head lang="zh-cn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="__CSS__/myweui.min.css">
+    <script type="text/javascript" src="__JS__/myweui.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="__JS__/jweixin-1.2.0.js"></script>
+
+</head>
+<body>
+<div id="container" class="container">
+    <div class="weui-article">
+        <img class="" src="__IMAGE__/headimg.jpg">
+        <h1><span class="weui-badge">{$cf.status == 0 ? '进行中':'已结束'}</span>第{$cf.cycle_id}期合买服务</h1>
+        <p>最低购买1元，只要加满进度条就能出票了！</p>
+        <div class="weui-progress">
+            <div class="weui-progress__bar">
+                <div class="weui-progress__inner-bar" style="width: {$summary.cur_money== 0 ? 0 : round($summary.cur_money*100/$cf.money)}%"></div>
+            </div>
+            <span class="weui-progress__opr weui-badge">{$summary.cur_money==0 ? 0 : round($summary.cur_money*100/$cf.money)}%</span>
+        </div>
+        <h1></h1>
+        <div class="weui-grids">
+            <div class="weui-grid">
+                <p class="weui-grid__label">￥{$cf.money|default = 0}</p>
+                <div class="weui-grid__label" align="center">目标金额</div>
+            </div>
+            <div class="weui-grid">
+                <p class="weui-grid__label">￥{$summary.cur_money|default = 0}</p>
+                <div class="weui-grid__label" align="center">当前金额</div>
+            </div>
+            <div class="weui-grid">
+                <p class="weui-grid__label">{$summary.cur_cnt|default = 0}人</p>
+                <div class="weui-grid__label" align="center">支持人数</div>
+            </div>
+        </div>
+        <div class="weui-cells">
+            {php}
+            if($cf['status'] == 0){
+                $str = '<a class="weui-btn weui-btn_primary" href="chose?cycle_id='.$cf['cycle_id'].'">我要参团</a>';
+            }else{
+                $str = '<a class="weui-btn weui-btn_primary weui-btn_disabled">已结束</a>';
+            }
+            echo $str;
+            {/php}
+            <a class="weui-btn weui-btn_primary" href="track">我的订单</a>
+        </div>
+    </div>
+</div>
+<script>
+    wx.config({
+            appId: '{$signPackage.appId}',
+            timestamp: {$signPackage.timestamp},
+            nonceStr: '{$signPackage.nonceStr}',
+            signature: '{$signPackage.signature}',
+            jsApiList: [
+            'checkJsApi',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage'
+            ]
+    });
+    wx.ready(function () {
+        // 1 判断当前版本是否支持指定 JS 接口，支持批量判断
+        wx.checkJsApi({
+            jsApiList: [
+                'getNetworkType',
+                'previewImage',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage'
+            ],
+        });
+        var shareData = {
+//标题
+            title: '第{$cf.cycle_id}期合买',
+//摘要
+            desc: '合买金额{$cf.money}元，已有{$summary.cur_cnt|default = 0}人参与',
+//链接,可以换主页
+            link: '{$signPackage.url}',
+//缩略图
+            imgUrl: '{$signPackage.imgUrl}'
+
+        };
+        wx.onMenuShareAppMessage(shareData);
+        wx.onMenuShareTimeline(shareData);
+    });
+</script>
+</body>
+</html>
+

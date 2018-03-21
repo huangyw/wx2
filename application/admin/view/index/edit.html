@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head lang="zh-cn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>合买设置后台</title>
+    <link rel="stylesheet" href="__CSS__/myweui.min.css">
+    <script type="text/javascript" src="__JS__/myweui.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="__JS__/do.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div id="form" class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">期数</label></div>
+            <div class="weui-cell__bd">
+                <input name="cycle_id" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入需要合买的期数"
+                       value="{$cycle_id}">
+            </div>
+        </div>
+        <div id="cycle_id_tips" class="weui-cell weui-cell_warn"></div>
+        {for start="0" end="$reds|sizeof"}
+        <div class="wrapper">
+            <div class="weui-cells__title">第{$i+1}注
+                <i id="cancel" class="weui-icon-cancel"></i>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">红球个数</label></div>
+                <div class="weui-cell__bd">
+                    <input id="red_{$i+1}" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入本注的红球个数"
+                           value="{$reds[$i]}">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">蓝球个数</label></div>
+                <div class="weui-cell__bd">
+                    <input id="blue_{$i+1}" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入本注的蓝球个数"
+                           value="{$blues[$i]}">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">倍数</label></div>
+                <div class="weui-cell__bd">
+                    <input id="num_{$i+1}" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入本注的倍数"
+                           value="{$nums[$i]}">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">金额</label></div>
+                <div class="weui-cell__bd">
+                    <input id="money_{$i+1}" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入本注的金额"
+                           value="{$moneys[$i]}">
+                </div>
+            </div>
+        </div>
+        {/for}
+    </div>
+    <div id="input_tips" class="weui-cell weui-cell_warn"></div>
+    <a id="addBtn" href="javascript:;" class="weui-btn weui-btn_warn">添加一注</a>
+    <a id="submit" href="javascript:;" class="weui-btn weui-btn_primary">提交</a>
+</div>
+</body>
+<script type="text/javascript">
+    //注数计数器
+    var num = "{$reds|sizeof}";
+
+    //新增按钮功能
+    $("#addBtn").click(function () {
+        num++;
+        var html =
+            '<div class="wrapper">\n' +
+            '<div class="weui-cells__title">第' + num + '注' +
+            '<i id="cancel" class="weui-icon-cancel"></i>' +
+            '</div>\n' +
+            '        <div class="weui-cell">\n' +
+            '            <div class="weui-cell__hd"><label class="weui-label">红球个数</label></div>\n' +
+            '            <div class="weui-cell__bd">\n' +
+            '                <input id="red_' + num + '" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入本注的红球个数">\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '        <div class="weui-cell">\n' +
+            '            <div class="weui-cell__hd"><label class="weui-label">蓝球个数</label></div>\n' +
+            '            <div class="weui-cell__bd">\n' +
+            '                <input id="blue_' + num + '" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入本注的蓝球个数">\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '        <div class="weui-cell">\n' +
+            '            <div class="weui-cell__hd"><label class="weui-label">倍数</label></div>\n' +
+            '            <div class="weui-cell__bd">\n' +
+            '                <input id="num_' + num + '" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入本注的倍数">\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '        <div class="weui-cell">\n' +
+            '            <div class="weui-cell__hd"><label class="weui-label">金额</label></div>\n' +
+            '            <div class="weui-cell__bd">\n' +
+            '                <input id="money_' + num + '" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入本注的金额">\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '</div>\n';
+        $("#form").append(html);
+    });
+
+    //删除按钮功能
+    $(".container").on("click", "#cancel", function (e) {
+        e.preventDefault();
+        $(this).closest('.wrapper').remove();
+        num--;
+    })
+
+    //获取输入数据数组
+    function getField(a) {
+        var b = [];
+        $(a).each(function () {
+            if ($(this).val() == "") {
+                return false;
+            } else {
+                b.push($(this).val());
+            }
+        });
+        return b;
+    };
+
+    //提交按钮功能
+    $("#submit").click(function (e) {
+        e.preventDefault();
+        var cycle_id = $("input[name='cycle_id']").val();
+        var reds = getField("input[id*='red']");
+        var blues = getField("input[id*='blue']");
+        var nums = getField("input[id*='num']");
+        var moneys = getField("input[id*='money']");
+        $("#input_tips").children(".weui-cell__hd").remove();
+        $("#cycle_id_tips").closest(".weui-cell__bd").remove();
+        if (cycle_id.length == 0 || reds.length == 0 || blues.length == 0 || nums.length == 0 || moneys.length == 0) {
+            var show_html =
+                '<div class="weui-cell__hd">\n' +
+                '     <label class="weui-label">您还没有填完</label>\n' +
+                '</div>';
+            $("#input_tips").append(show_html);
+        } else {
+            $.ajax({
+                //访问地址
+                url: 'edit',
+                //访问方式，一般有GET或POST两种
+                type: 'POST',
+                //返回的数据格式，这个是可选参数，jquery回默认判断返回参数的类型
+                dataType: 'json',
+                //发送的数据
+                data: {
+                    'cycle_id': cycle_id,
+                    'reds': reds,
+                    'blues': blues,
+                    'nums': nums,
+                    'moneys': moneys
+                },
+                //成功后的处理函数,res为服务器返回的数据
+                success: function (res) {
+                    if (res == '1') {
+                        var show_html =
+                            '<div class="weui-cell__hd"\n' +
+                            '     <label class="weui-label">期数已存在,请在查询页面直接修改</label>\n' +
+                            '</div>';
+                        $("#input_tips").append(show_html);
+                    } else if (res == '2') {
+                        var show_html =
+                            '<div class="weui-cell__hd"\n' +
+                            '     <label class="weui-label">发生未知错误</label>\n' +
+                            '</div>';
+                        $("#input_tips").append(show_html);
+                    }
+                    else {
+                        window.location.href = "index";
+                    }
+                },
+                //失败后的处理函数
+                error: function () {
+                    console.log("error");
+                }
+            });
+        }
+    });
+
+</script>
+</html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head lang="zh-cn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>合买后台登陆</title>
+    <link rel="stylesheet" href="__CSS__/myweui.min.css">
+    <script type="text/javascript" src="__JS__/myweui.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery-3.3.1.min.js"></script>
+<body>
+<div id="container" class="container">
+    <div class="weui-msg">
+        <div class="weui-msg__icon-area"><img style="width: 30%;" src="__IMAGE__/bdimg.jpg"></div>
+        <div class="weui-msg__text-area">
+            <h1 class="weui-msg__title">请输入账号密码登陆后台系统</h1>
+        </div>
+        <form class="weui-cells" action="index" method="post">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">帐号</label></div>
+                <div class="weui-cell__bd">
+                    <input name="userName" class="weui-input" placeholder="请输入账号">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">密码</label></div>
+                <div class="weui-cell__bd">
+                    <input name="pwd" type="password" class="weui-input" placeholder="请输入密码">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <button id="addBtn" type="submit" class="weui-btn weui-btn_warn">登陆</button>
+            </div>
+        </form>
+    </div>
+    <div align="center">
+        <h4 style="color: red">{$err_code ? "用户名和密码不正确" : null}</h4>
+    </div>
+</div>
+</body>
+</html>

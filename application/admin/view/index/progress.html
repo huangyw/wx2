@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head lang="zh-cn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>合买进度</title>
+    <link rel="stylesheet" href="__CSS__/myweui.min.css">
+    <script type="text/javascript" src="__JS__/myweui.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="__JS__/do.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="headtext" style="text-align: center; margin: 20px">
+        <h1>第{$cycle_id}期</h1>
+    </div>
+    <div class="weui-cells">
+        {assign name="s" value="0"}
+        {assign name="c" value="0"}
+        {volist name="user_purchase" id="up"}
+        <a class="weui-cell weui-cell_access" href="#">
+            <div class="weui-cell__hd">
+               <img src="{$up.headimgurl}" style="width: 30px; margin-right: 5px;">
+            </div>
+            <div class="weui-cell__bd">{$up.nickname}</div>
+            <div class="weui-cell__ft">
+                {$up.money}元
+            </div>
+        </a>
+        {php} $s = $s + $up['money']; {/php}
+        {php} $c++; {/php}
+        {/volist}
+        <div class="weui-cell">
+            <div class="weui-cell__bd">合计{$s>=$total_money ? '<span class="weui-badge">完成</span>' : ''}</div>
+            <div class="weui-cell__ft">{$c}人 | {$s}元/{$total_money}元 | 余{$total_money - $s}元</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

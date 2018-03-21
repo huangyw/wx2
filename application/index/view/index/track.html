@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head lang="zh-cn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>个人订单查询</title>
+    <link rel="stylesheet" href="__CSS__/myweui.min.css">
+    <script type="text/javascript" src="__JS__/myweui.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    {php} if($ups == null) {echo '<div class="weui-cells"><div class="weui-cells__title">暂无订单</div></div>';}{/php}
+    {volist name="ups" id="up"}
+    <div class="weui-cells">
+        <div class="weui-cells__title">第{$up.cycle_id}期</div>
+        <a class="weui-cell weui-cell_access" href="#">
+            <div class="weui-cell__bd">{$up.money}元</div>
+            <div class="weui-cell__ft">
+                {:date('Y-m-d H:i:s', $up.recv_time)}
+            </div>
+        </a>
+    </div>
+    {/volist}
+</div>
+</body>
+</html>

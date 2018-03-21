@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head lang="zh-cn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>合买设置后台</title>
+    <link rel="stylesheet" href="__CSS__/myweui.min.css">
+    <script type="text/javascript" src="__JS__/myweui.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="__JS__/do.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="weui-cells">
+        <div class="weui-cell">第{$cycle_id}期</div>
+        {for start="0" end="$reds|sizeof"}
+        <a class="weui-cell">
+            <div class="weui-cell__bd ">
+                {$reds[$i]} + {$blues[$i]} x {$nums[$i]}
+            </div>
+            <div class="weui-cell__ft">{$moneys[$i]}元</div>
+        </a>
+        {/for}
+    </div>
+    <a id="editBtn" href="edit?cycle_id={$cycle_id}" class="weui-btn weui-btn_warn">修改</a>
+    <a id="deleteBtn" href="javascript:;" class="weui-btn weui-btn_plain-default">删除</a>
+    <a id="pgsBtn" href="progress?cycle_id={$cycle_id}" class="weui-btn weui-btn_primary">查看进度</a>
+
+
+    <!--BEGIN actionSheet-->
+    <div class="weui-mask" id="iosMask" style="display: none"></div>
+    <div class="weui-actionsheet" id="iosActionsheet">
+        <div class="weui-actionsheet__title">
+            <p class="weui-actionsheet__title-text">您现在操作删除第{$cycle_id}期的全部内容，确定吗?</p>
+        </div>
+        <div class="weui-actionsheet__menu">
+            <div id="iosActionsheetConfirm" class="weui-actionsheet__cell">
+                <a href="delete?cycle_id={$cycle_id}" style="color: red">确定</a>
+            </div>
+        </div>
+        <div class="weui-actionsheet__action">
+            <div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
+        </div>
+    </div>
+    <!--END actionSheet-->
+</div>
+<script type="text/javascript">
+    $(function(){
+        var $iosActionsheet = $('#iosActionsheet');
+        var $iosMask = $('#iosMask');
+
+        function hideActionSheet() {
+            $iosActionsheet.removeClass('weui-actionsheet_toggle');
+            $iosMask.fadeOut(200);
+        }
+
+        $iosMask.on('click', hideActionSheet);
+        $('#iosActionsheetCancel').on('click', hideActionSheet);
+        $("#deleteBtn").on("click", function(){
+            $iosActionsheet.addClass('weui-actionsheet_toggle');
+            $iosMask.fadeIn(200);
+        });
+    });
+
+</script>
+</body>
+</html>

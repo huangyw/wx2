@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head lang="zh-cn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>合买设置后台</title>
+    <link rel="stylesheet" href="__CSS__/myweui.min.css">
+    <script type="text/javascript" src="__JS__/myweui.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="__JS__/do.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="page msg_warn js_show">
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="{$status? 'weui-icon-success' : 'weui-icon-warn'} weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h1 class="weui-msg__title">{$status? '操作成功' : '操作失败'}</h1>
+            </div>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="index" class="weui-btn weui-btn_primary">返回首页</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

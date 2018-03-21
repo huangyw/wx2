@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head lang="zh-cn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>支付中</title>
+    <link rel="stylesheet" href="__CSS__/myweui.min.css">
+    <script type="text/javascript" src="__JS__/myweui.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="__JS__/do.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+  <h2 align="center">支付订单创建成功，正在支付中……</h2>
+</div>
+<script type="text/javascript">
+    $(function () {
+        if (typeof WeixinJSBridge == "undefined"){
+            if( document.addEventListener ){
+                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+            }else if (document.attachEvent){
+                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+            }
+        }else{
+            onBridgeReady();
+        }
+    });
+    function onBridgeReady(){
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', {$param},
+            function(res){
+                if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                    var out_trade_no = "{$out_trade_no}";
+                    var timeRun = 0;
+                    setInterval(function(){
+                        timeRun += 1;
+                        $.ajax({
+                            url : 'orderQuery',
+                            type : 'post',
+                            dataType: 'json',
+                            data : {'out_trade_no' : "{$out_trade_no}"},
+                            success : function(res){
+                                if(res) {
+                                    window.location.href = "{:Url('index/mysuccess')}";
+                                }
+                            }
+                        });
+                        if(timeRun > 5){
+                            clearInterval(this);
+                            alert("订单支付结果未确认");
+                        }
+                    },1000);
+                }else{
+                    $.ajax({
+                        url : 'orderCancel',
+                        type : 'post',
+                        async : false,
+                        dataType: 'json',
+                        data : {'out_trade_no' : "{$out_trade_no}"},
+                        success : function (res) {
+                            if(res){
+                                window.history.go(-1);
+                            }else{
+                                alert('订单取消失败');
+                                window.history.go(-1);
+                            }
+                        },
+                        error : function () {
+                            alert('系统错误');
+                            window.history.go(-1);
+                        }
+                    });
+                }
+            }
+        );
+    };
+</script>
+</body>
+</html>

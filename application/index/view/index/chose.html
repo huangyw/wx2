@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head lang="zh-cn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>选择合买金额</title>
+    <link rel="stylesheet" href="__CSS__/myweui.min.css">
+    <script type="text/javascript" src="__JS__/myweui.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="__JS__/do.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="weui-panel">
+        <div class="weui-media-box weui-media-box_text">
+            <h4 class="weui-media-box__title" align="center">第{$cycle_id}服务内容</h4>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>类型</p>
+            </div>
+            <div class="weui-cell__ft">金额</div>
+        </div>
+        {assign name="s" value="0"}
+        {volist name="items" id="item"}
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>
+                    {$item.red} + {$item.blue} x {$item.quantity}
+                </p>
+            </div>
+            <div class="weui-cell__ft">{$item.money}元</div>
+        </div>
+        {php} $s = $s + $item['money']; {/php}
+        {/volist}
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>合计</p>
+            </div>
+            <div class="weui-cell__ft">{$s}元</div>
+        </div>
+    </div>
+    <div class="weui-grids">
+        <div class="weui-grid" align="center">1元</div>
+        <div class="weui-grid" align="center">2元</div>
+        <div class="weui-grid" align="center">5元</div>
+        <div class="weui-grid" align="center">10元</div>
+        <div class="weui-grid" align="center">15元</div>
+        <div class="weui-grid" align="center">20元</div>
+        <div class="weui-grid" align="center">30元</div>
+        <div class="weui-grid" align="center">50元</div>
+        <div class="weui-grid" align="center">100元</div>
+    </div>
+    <div class="weui-cells weui-cells_form">
+        <div id="err_money" class="weui-cells__title">可购买金额：{$s-$pmoney} 元</div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">其他金额</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input id="money" class="weui-input" type="number" pattern='[0-9]*' placeholder="请输入金额" onkeyup="value=value.replace(/[^\d]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))">
+            </div>
+            <a id="allin" class="weui-cell__ft" style="color: #10aeff">全部购买</a>
+        </div>
+    </div>
+    <a id="submit" class="weui-btn weui-btn_primary">确定</a>
+</div>
+<script type="text/javascript">
+    var grid     = ".weui-grid";
+    var input    = "#money";
+    var submit   = "#submit";
+    var cycle_id = "{$cycle_id}";
+    var openid   = "{$openid}";
+    var allin    = "#allin";
+    var f = 0;
+    $(grid).click(function () {
+        var input_money = $(this).text().replace(/元/, '');
+        $(input).val(input_money);
+    });
+
+    $(allin).click(function () {
+        $("#err_money span").remove();
+        var input_money = "{$s-$pmoney}";
+        $(input).val(input_money);
+    })
+
+    $(submit).click(function () {
+        f = $(input).val();
+
+        if(!f) {
+            $("#err_money span").remove();
+            $("#err_money").append('<span style="color: red">  购买金额不能为空</span>');
+        }else if(f <= 0) {
+            $("#err_money span").remove();
+            $("#err_money").append('<span style="color: red">  购买金额需大于0</span>');
+        }else{
+            $.ajax({
+                url : '{:Url(\'weixinpay/orderAdvance\')}',
+                type : 'post',
+                dataType: 'json',
+                data : {
+                    'cycle_id' : "{$cycle_id}",
+                    'fee'      : f,
+                    'openid'   : openid
+                },
+                success : function(res){
+                    if(res) {
+                        window.location.href = "{:Url('weixinpay/pay')}?fee=" + f + "&cycle_id=" + cycle_id + "&openid=" + openid;
+                    }else{
+                        $("#err_money span").remove();
+                        $("#err_money").append('<span style="color: red">  购买额度不足</span>');
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
